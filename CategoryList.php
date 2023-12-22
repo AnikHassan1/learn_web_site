@@ -34,72 +34,91 @@
 
 <body class="skin-black">
     <!-- header logo: style can be found in header.less -->
-    <?php include("./includes/header.php")?>
+    <?php include("./includes/header.php") ?>
     <div class="wrapper row-offcanvas row-offcanvas-left">
         <!-- Left side column. contains the logo and sidebar -->
-        <?php include("./includes/Sildebar.php")?>
+        <?php include("./includes/Sildebar.php") ?>
+
+        <?php if (isset($_GET['deletid'])) {
+            echo $getid = $_GET['deletid'];
+            $sqlD = "DELETE   FROM categories WHERE cat_id=$getid";
+            if ($conn->query($sqlD) === TRUE) {
+                echo " <h1>Record Data Deleted</h1>";
+                echo "<script>window.open('CategoryCreate.php')</script>";
+            } else {
+                echo "Error deleting record: " . mysqli_error($conn);
+            }
+        } ?>
 
         <!-- Right side column. Contains the navbar and content of the page -->
         <aside class="right-side">
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    LearnerList
+                    Category List
+                    <a class="btn btn-success ms-5" href="CategoryCreate.php">Category Create</a>
 
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">LearnerList</li>
+                    <li class="active">CategoryList</li>
                 </ol>
             </section>
-
+            <?php
+            $sql = "SELECT * FROM categories";
+            $result = $conn->query($sql);
+            ?>
             <!-- Main content -->
             <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">Learner Table</h3>
-                        </div><!-- /.box-header -->
-                        <div class="box-body">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th style="width: 10px">Sl</th>
-                                    <th> First Name:</th>
-                                    <th> Last Name:</th>
-                                    <th>  Email:</th>
-                                    <th>  Password:</th>
-                                    <th> Username:</th>
-                                   <th>Action</th> 
-                                </tr>
-                                <tr>
-                                    <td>01</td>
-                                    <td>john</td>
-                                    <td>Due</td>
-                                    <td>JohnDue@gmail.com</td>
-                                    <td>john1234@</td>
-                                    <td>johnDue1</td>
-                                    <td>
-                                        <button class="btn btn-primary">Edit</button>
-                                        <button class="btn btn-danger">Delete</button>
-                                    </td>
-                                    
-                                        
-                                    
-                                    <td></td>
-                                </tr>
-                                
-                            </table>
-                        </div><!-- /.box-body -->
-                    </div><!-- /.box -->
-                </div><!-- /.col -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box">
+                            <div class="box-header">
+                                <h3 class="box-title">CategoryList</h3>
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th> Category id:</th>
+                                        <th> Category Name:</th>
+                                        <th>Category Description:</th>
+                                        <th> Category icon:</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    <?php
+                                    while ($data = $result->fetch_assoc()) {
+                                        $cat_id = $data['cat_id'];
+                                        $cat_name = $data['cat_name'];
+                                        $cat_desc = $data['cat_desc'];
+                                        $cat_icon = $data['cat_icon'];
+                                    ?>
+                                        <tr>
+                                            <td><?php echo  $cat_id  ?></td>
+                                            <td><?php echo $cat_name ?></td>
+                                            <td><?php echo $cat_icon ?></td>
+                                            <td><i class='<?php echo $cat_icon ?> fa-5x'></i></td>
+                                            <td>
+                                                <a class='btn btn-primary' href='editcategory.php?id=<?php echo  $cat_id  ?>'>Edit</a>
+                                                <a class='btn btn-danger' href='CategoryList.php?deletid=<?php echo  $cat_id  ?>'>Delete</a>
+                                            </td>
+                                        </tr>
+
+
+                                    <?php  } ?>
+
+
+
+                                </table>
+                            </div><!-- /.box-body -->
+                        </div><!-- /.box -->
+                    </div><!-- /.col -->
+                </div>
             </div>
-        </div>
         </aside><!-- /.right-side -->
     </div><!-- ./wrapper -->
 
     <!-- add new calendar event modal -->
-    <?php include("./includes/footer.php")?>
+    <?php include("./includes/footer.php") ?>
 
 </body>
 

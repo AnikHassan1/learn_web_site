@@ -39,6 +39,17 @@
         <!-- Left side column. contains the logo and sidebar -->
         <?php include("./includes/Sildebar.php")?>
 
+        <?php if (isset($_GET['id'])) {
+            echo $getid = $_GET['id'];
+            $sqlD = "DELETE   FROM instructors WHERE user_id=$getid";
+            if ($conn->query($sqlD) === TRUE) {
+                echo " <h1>Record Data Deleted</h1>";
+                echo "<script>window.open('CategoryCreate.php')</script>";
+            } else {
+                echo "Error deleting record: " . mysqli_error($conn);
+            }
+        } ?>
+
         <!-- Right side column. Contains the navbar and content of the page -->
         <aside class="right-side">
             <!-- Content Header (Page header) -->
@@ -52,7 +63,10 @@
                     <li class="active">Instractor</li>
                 </ol>
             </section>
-
+<?php
+$sqlins="SELECT * FROM instructors";
+$Insresult = $conn->query($sqlins);
+?>
             <!-- Main content -->
             <div class="container">
             <div class="row">
@@ -67,32 +81,42 @@
                                     <th style="width: 10px">Sl</th>
                                     <th> First Name:</th>
                                     <th> Last Name:</th>
+                                    <th> Username:</th>
                                     <th>  Email:</th>
                                     <th>  Password:</th>
-                                    <th> Username:</th>
                                     <th> Phone:</th>
                                     <th> Role:</th>
                                    <th>Action</th> 
                                 </tr>
+                                <?php while($indata=$Insresult->fetch_assoc()){
+                                     $user_id     =$indata['user_id'];
+                                     $user_fname  =$indata['user_fname'];
+                                     $user_lname  =$indata['user_lname'];
+                                     $user_name   =$indata['user_name'];
+                                     $user_email  =$indata['user_email'];
+                                     $user_pass   =$indata['user_pass'];
+                                     $about       =$indata['about'];
+                                     $admin       =$indata['admin'];
+                                ?>
                                 <tr>
-                                    <td>01</td>
-                                    <td>john</td>
-                                    <td>Due</td>
-                                    <td>JohnDue@gmail.com</td>
-                                    <td>john1234@</td>
-                                    <td>johnDue1</td>
-                                    <td>01848004287</td>
-                                    <td>Bangla</td>
+                                    <td><?php echo  $user_id?></td>
+                                    <td><?php echo   $user_fname?></td>
+                                    <td><?php echo  $user_lname?></td>
+                                    <td><?php echo  $user_name?></td>
+                                    <td><?php echo  $user_email?></td>
+                                    <td><?php echo  $user_pass?></td>
+                                    <td><?php echo  $about?></td>
+                                    <td><?php echo   $admin   ?></td>
                                     <td>
-                                        <button class="btn btn-primary">Edit</button>
-                                        <button class="btn btn-danger">Delete</button>
+                                        <a class="btn btn-primary" href="instractorEdit.php?id=<?php echo $user_id ?>" >Edit</a>
+                                        <a class="btn btn-danger" href="InstractorList.php?id=<?php echo $user_id ?>" >Delete</a>
                                     </td>
                                     
                                         
                                     
                                     <td></td>
                                 </tr>
-                                
+                                <?php }  ?>
                             </table>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->

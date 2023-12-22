@@ -39,13 +39,24 @@
         <!-- Left side column. contains the logo and sidebar -->
         <?php include("./includes/Sildebar.php")?>
 
+        <?php if (isset($_GET['delete'])) {
+            echo $getid = $_GET['delete'];
+            $sqlD3 = "DELETE  FROM slider WHERE slide_id=$getid";
+            if ($conn->query($sqlD3) === TRUE) {
+                echo " <h1>Record Data Deleted</h1>";
+                echo "<script>window.open('SliderCreate.php')</script>";
+            } else {
+                echo "Error deleting record: " . mysqli_error($conn);
+            }
+        } ?>
+
         <!-- Right side column. Contains the navbar and content of the page -->
         <aside class="right-side">
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    Slider
-
+                    Slider List
+                    <a class="btn btn-success ms-5" href="SliderCreate.php">Slider Create</a>
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -53,6 +64,10 @@
                 </ol>
             </section>
 
+            <?php
+            $sql1="SELECT * FROM slider";
+            $RESULT=$conn->query($sql1);
+            ?>
             <!-- Main content -->
             <div class="container">
             <div class="row">
@@ -66,23 +81,31 @@
                                 <tr>
                                     <th style="width: 10px">ID</th>
                                     <th> Image:</th>
-                                    <th> Status:</th>
+                                    <th>Status:</th>
                                    <th>Action</th> 
                                 </tr>
+                               <?PHP 
+                                while($DATAS=$RESULT->fetch_assoc()){
+                                    $slide_id =$DATAS['slide_id'];
+                                    $slide_image=$DATAS['slide_image'];
+                                    $Status=$DATAS['Status'];
+                                
+                               ?>
                                 <tr>
-                                    <td>01</td>
-                                    <td>john</td>
-                                    <td>Due</td>
+                                    <td><?php echo  $slide_id?></td>
+                                    <td><img style="width: 40px; height:50px;" src="sliderImage/<?php echo   $slide_image?>" alt=""></td>
+                                    <td><?php echo   $Status?></td>
+                                    
                                     <td>
-                                        <button class="btn btn-primary">Edit</button>
-                                        <button class="btn btn-danger">Delete</button>
+                                        <a class="btn btn-primary" href="editSlider.php?delete=<?php echo $slide_id ?>">Edit</a>
+                                        <a class="btn btn-danger" href="SliderList.php?delete=<?php echo $slide_id ?>">Delete</a>
                                     </td>
                                     
                                         
                                     
                                     <td></td>
                                 </tr>
-                                
+                                <?php } ?>
                             </table>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
